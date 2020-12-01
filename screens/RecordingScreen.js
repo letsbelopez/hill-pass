@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Button, SafeAreaView } from 'react-native';
 import TimerDisplay from '../components/TimerDisplay';
 
-export default function RecordingScreen() {
+export default function RecordingScreen(props) {
   const [count, setCount] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [interval, setIntervalId] = useState(null);
@@ -42,7 +42,7 @@ export default function RecordingScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TimerDisplay seconds={seconds} />
+      <TimerDisplay seconds={seconds} fontSize={50} color='white' />
       <View style={styles.oneButtonContainer}>
         <TouchableOpacity onPress={() => onCountUp()}>
           <View style={styles.countPlusLargeShadow}>
@@ -68,6 +68,7 @@ export default function RecordingScreen() {
       </View>
       
       <Button onPress={() => setCount(count - 1)} title="-" />
+      <Button onPress={props.onStopRecording} title="Go Back" />
       <StatusBar style="auto" />
     </SafeAreaView>
   );

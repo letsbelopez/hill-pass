@@ -1,9 +1,9 @@
 import React from 'react';
-import { FlatList, SafeAreaView, StyleSheet, View } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 
 import RecordItem from '../components/RecordItem';
 
-export default function RecordsScreen() {
+export default function RecordsScreen(props) {
   const renderItem = ({item}) => {
     return (
       <RecordItem 
@@ -12,7 +12,7 @@ export default function RecordsScreen() {
         count={item.count} 
       />
     );
-  };
+  }
 
   const DATA = [
     { id: '1', title: 'Hill Climbs', milliseconds: 1000, count: 7 },
@@ -29,16 +29,58 @@ export default function RecordsScreen() {
         renderItem={renderItem}
         keyExtractor={item => item.id}
         ItemSeparatorComponent={() => <View style={styles.separator} />} />
+      <View style={styles.footer}>
+        <TouchableOpacity onPress={props.onStartRecording}>
+          <View style={styles.recordButton}>
+            <View style={styles.recordIconOuter}>
+              <View style={styles.recordIcon}></View>
+            </View>
+            <Text style={styles.recordButtonLabel}>Record</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: 'white'
   },
   separator: {
-    backgroundColor: 'black',
-    height: 1
+    backgroundColor: 'lightgrey',
+    height: 1,
+    marginLeft: 20
+  },
+  footer: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderTopWidth: 1,
+    borderTopColor: 'lightgrey',
+    backgroundColor: 'white'
+  },
+  recordButton: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    alignItems: 'center',
+  },
+  recordButtonLabel: {
+    marginTop: 5
+  },
+  recordIconOuter: {
+    height: 30,
+    width: 30,
+    borderRadius: 30 *2,
+    borderWidth: 1,
+    borderColor: 'grey',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  recordIcon: {
+    height: 15,
+    width: 15,
+    borderRadius: 15 * 2,
+    backgroundColor: 'grey'
   }
-})
+});
