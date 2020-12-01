@@ -13,9 +13,9 @@ export default function TimerDisplay(props) {
       { days > 0 ? <Text>{`${days}d`}</Text> : null }
       { hours > 0 ? <Text>{`${hours}h`}</Text> : null }
       { hours > 0 ? <Text>{`${hours}h`}</Text> : null }
-      <Text style={styles.text}>{`${minutes}`.padStart(2, '0')}:</Text>
-      <Text style={styles.text}>{`${seconds}`.padStart(2, '0')}:</Text>
-      <Text style={styles.text}>{`${milliseconds}`.padStart(3, '0')}</Text>
+      <Text style={{...styles.text, fontSize: props.fontSize, color: props.color}}>{`${minutes}`.padStart(2, '0')}:</Text>
+      <Text style={{...styles.text, fontSize: props.fontSize, color: props.color}}>{`${seconds}`.padStart(2, '0')}:</Text>
+      <Text style={{...styles.text, fontSize: props.fontSize, color: props.color}}>{`${milliseconds}`.padStart(3, '0')}</Text>
     </View>
   );
 }
@@ -26,8 +26,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    color: 'white',
-    fontSize: 50,
     fontVariant: ['tabular-nums'],
   }
 });
