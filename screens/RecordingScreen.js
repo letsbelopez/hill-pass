@@ -1,147 +1,115 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Button, SafeAreaView } from 'react-native';
 import TimerDisplay from '../components/TimerDisplay';
 
-export default function RecordingScreen(props) {
-  const [count, setCount] = useState(0);
-  const [seconds, setSeconds] = useState(0);
-  const [interval, setIntervalId] = useState(null);
-  const [pausedTime, setPausedTime] = useState(0);
+export default class RecordingScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0,
+      seconds: 0,
+      interval: null,
+      pausedTime: 0,
+    };
+  }
 
-  const onStartClock = () => {
+  componentDidMount() {
+    this.onStartClock();
+  }
+
+  componentWillUnmount() {
+    if (this.state.interval) clearInterval(this.state.interval);
+  }
+
+  onStartClock = () => {
     let startTime = Date.now();
 
     let intervalId = setInterval(() => {
       let currentTime = Date.now();
       let difference;
-      if (pausedTime) {
-        difference = (currentTime - startTime) + pausedTime;
+      if (this.state.pausedTime) {
+        difference = (currentTime - startTime) + this.state.pausedTime;
       } else {
         difference = currentTime - startTime;
       }
-      setSeconds(difference);
+      this.setState({seconds: difference});
     }, 1);
-    setIntervalId(intervalId);
+    this.setState({interval: intervalId});
   }
 
-  const onStopClock = () => {
-    clearInterval(interval);
-    setIntervalId(null);
-    setPausedTime(seconds);
+  onStopClock = () => {
+    clearInterval(this.state.interval);
+    this.setState({
+      interval: null,
+      pausedTime: this.state.seconds,
+    });
   }
   
-  const onCountUp = () => {
-    setCount(count + 1);
-  }
-  
-  const resetClock = () => {
-    setSeconds(0);
-    setPausedTime(0);
+  onCountUp = () => {
+    this.setState({count: this.state.count + 1});
   }
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <TimerDisplay seconds={seconds} fontSize={50} color='white' />
-      <View style={styles.oneButtonContainer}>
-        <TouchableOpacity onPress={() => onCountUp()}>
-          <View style={styles.countPlusLargeShadow}>
-            <View style={styles.countPlusMediumShadow}>
-              <View style={styles.countPlus}>
-                <Text style={styles.count}>{count}</Text>
-              </View>
-            </View>
-          </View>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.twoButtonsContainer}>
-        <TouchableOpacity onPress={() => {interval ? onStopClock() : onStartClock()}}>
-          <View style={{...styles.buttonSmall, backgroundColor: typeof interval == 'number' ? 'red' : 'green',}}>
-            <Text style={styles.playPauseText}>{typeof interval == 'number' ? 'Stop' : 'Start'}</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={resetClock} disabled={typeof interval == 'number'}>
-          <View style={{...styles.buttonSmall, backgroundColor: 'grey', opacity: typeof interval == 'number' ? 0.5: 1}}>
-            <Text style={styles.countPlusText}>Reset</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-      
-      <Button onPress={() => setCount(count - 1)} title="-" />
-      <Button onPress={props.onStopRecording} title="Go Back" />
-      <StatusBar style="auto" />
-    </SafeAreaView>
-  );
+  onCountDown = () => {
+    this.setState({count: this.state.count - 1});
+  }
+  
+  resetClock = () => {
+    this.setState({
+      seconds: 0,
+      pausedTime: 0
+    });
+  }
+
+  render() {
+    const { seconds, count } = this.state;
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.sectionVertical}>
+          <Text style={styles.label}>TIME</Text>
+          <TimerDisplay seconds={seconds} fontSize={75} color='black' />
+        </View>
+        <View style={{...styles.sectionVertical, ...styles.borderTop}}>
+          <Text style={styles.label}>COUNT</Text>
+          <Text style={{fontSize: 100}}>{count}</Text>
+        </View>
+        <View style={{...styles.sectionHorizontal, ...styles.borderTop}}>
+          <Button onPress={this.onCountDown} title="-" />
+          <Button onPress={this.onStopClock} title="Stop" />
+          <Button onPress={this.onCountUp} title="+" />
+        </View>
+        <StatusBar style="auto" />
+      </SafeAreaView>
+    );
+  };
 }
 
 const styles = StyleSheet.create({
-  buttonSmall: {
-    backgroundColor: '#e81f76',
-    height: 100,
-    width: 100,
-    borderRadius: 100 * 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   container: {
     flex: 1,
-    backgroundColor: 'hsla(152, 0%, 10%, 1)',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
   },
-  oneButtonContainer: {
-    alignItems: 'center',
-    width: '100%'
+  label: {
+    color: 'lightgrey',
   },
-  twoButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%'
-  },
-  countPlus: {
-    backgroundColor: '#fff',
-    shadowColor: '#fff',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowRadius: 30,
-    shadowOpacity: .5,
-    height: 250,
-    width: 250,
-    borderRadius: 250 * 2,
+  sectionVertical: {
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: 75
+    paddingVertical: 50,
+    width: '90%',
+    flex: 1,
   },
-  countPlusMediumShadow: {
-    shadowColor: '#f0f',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowRadius: 60,
-    shadowOpacity: 1,
+  sectionHorizontal: {
+    paddingVertical: 50,
+    justifyContent: 'space-around',
+    alignItems: 'flex-end',
+    flexDirection: 'row',
+    width: '90%',
+    flex: 1,
   },
-  countPlusLargeShadow: {
-    shadowColor: '#0ff',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowRadius: 70,
-    shadowOpacity: .8,
+  borderTop: {
+    borderTopColor: 'lightgrey',
+    borderTopWidth: 1,
   },
-  countPlusText: {
-    color: 'white',
-    fontSize: 20
-  },
-  playPauseText: {
-    color: 'white',
-    fontSize: 20
-  },
-  count: {
-    color: 'black',
-    fontSize: 75
-  }
 });
