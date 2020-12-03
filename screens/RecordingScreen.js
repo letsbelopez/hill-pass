@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Button, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Button, SafeAreaView, Modal } from 'react-native';
 import TimerDisplay from '../components/TimerDisplay';
+import FinishScreen from './FinishScreen';
 
 export default class RecordingScreen extends React.Component {
   constructor(props) {
@@ -11,6 +12,7 @@ export default class RecordingScreen extends React.Component {
       seconds: 0,
       interval: null,
       pausedTime: 0,
+      finishModalVisible: false,
     };
   }
 
@@ -61,8 +63,12 @@ export default class RecordingScreen extends React.Component {
     });
   }
 
+  onFinish = () => {
+    this.setState({finishModalVisible: true})
+  }
+
   render() {
-    const { seconds, count } = this.state;
+    const { seconds, count, interval, finishModalVisible } = this.state;
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.sectionVertical}>
@@ -74,10 +80,34 @@ export default class RecordingScreen extends React.Component {
           <Text style={{fontSize: 100}}>{count}</Text>
         </View>
         <View style={{...styles.sectionHorizontal, ...styles.borderTop}}>
-          <Button onPress={this.onCountDown} title="-" />
-          <Button onPress={this.onStopClock} title="Stop" />
-          <Button onPress={this.onCountUp} title="+" />
+          <View style={styles.buttonContainer}>
+            <Button onPress={this.onCountDown} title="-" />
+            <TouchableOpacity onPress={interval ? this.onStopClock : this.onStartClock}>
+              <View style={interval ? styles.stopButton : styles.resumeButton}>
+                {interval ? <View style={styles.stopIcon}></View> : <Text style={{fontWeight: 'bold'}}>RESUME</Text>}
+              </View>
+            </TouchableOpacity>
+            {!interval && (
+              <TouchableOpacity onPress={this.onFinish}>
+                <View style={styles.stopButton}>
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>FINISH</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            <Button onPress={this.onCountUp} title="+" />
+          </View>
         </View>
+
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={finishModalVisible}
+          presentationStyle="overFullScreen"
+          onRequestClose={() => {
+            console.log('Modal has been closed.');
+          }}>
+          <FinishScreen milliseconds={seconds} count={count} />
+        </Modal>
         <StatusBar style="auto" />
       </SafeAreaView>
     );
@@ -111,5 +141,52 @@ const styles = StyleSheet.create({
   borderTop: {
     borderTopColor: 'lightgrey',
     borderTopWidth: 1,
+  },
+  stopButton: {
+    width: 75,
+    height: 75,
+    borderRadius: 75 * 2,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+
+    elevation: 4,
+  },
+  resumeButton: {
+    width: 75,
+    height: 75,
+    borderRadius: 75 * 2,
+    borderColor: 'black',
+    borderWidth: 2,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+  
+    elevation: 4,
+  },
+  stopIcon: {
+    height: 20,
+    width: 20,
+    backgroundColor: 'white',
+  },
+  buttonContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'space-around', 
+    flex: 1, 
+    alignItems: 'center',
   },
 });
