@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput} from 'react-native';
+import {View, Text, TextInput, Button} from 'react-native';
 
 import TimerDisplay from '../components/TimerDisplay';
 
@@ -21,6 +21,8 @@ export default function FinishScreen(props) {
         </View>
         <Text>Time: <TimerDisplay seconds={props.milliseconds} /></Text>
         <Text>Count: {props.count}</Text>
+        <Button title="Go back" onPress={props.onResume}/>
+        <Button title="Save" onPress={() => props.onSave(value)} />
       </View>
     </View>
   );

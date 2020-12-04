@@ -1,6 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Button, SafeAreaView, Modal } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import TimerDisplay from '../components/TimerDisplay';
 import FinishScreen from './FinishScreen';
 
@@ -67,6 +69,33 @@ export default class RecordingScreen extends React.Component {
     this.setState({finishModalVisible: true})
   }
 
+  onSave = async (title) => {
+    console.log('save', title);
+    try {
+      const value = await AsyncStorage.getItem('records');
+      if(value !== null) {
+        let data = JSON.parse(value);
+        await AsyncStorage.setItem('records', JSON.stringify(
+          [
+            ...data, 
+            { id: `${Date.now()}`, title, milliseconds: this.state.seconds, count: this.state.count }
+          ]
+        ));
+      } else {
+        await AsyncStorage.setItem('records', JSON.stringify(
+          [
+            { id: `${Date.now()}`, title, milliseconds: this.state.seconds, count: this.state.count }
+          ]
+        ));
+      }
+    } catch(e) {
+      // error reading value
+      console.log('error writing value');
+    }
+    this.props.onStopRecording();
+    this.setState({finishModalVisible: false});
+  }
+
   render() {
     const { seconds, count, interval, finishModalVisible } = this.state;
     return (
@@ -106,7 +135,7 @@ export default class RecordingScreen extends React.Component {
           onRequestClose={() => {
             console.log('Modal has been closed.');
           }}>
-          <FinishScreen milliseconds={seconds} count={count} />
+          <FinishScreen milliseconds={seconds} count={count} onSave={(title) => this.onSave(title) } onResume={() => this.setState({finishModalVisible: false})} />
         </Modal>
         <StatusBar style="auto" />
       </SafeAreaView>
