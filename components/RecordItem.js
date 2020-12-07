@@ -3,14 +3,14 @@ import { Text, TouchableOpacity, StyleSheet, View } from 'react-native';
 
 import TimerDisplay from './TimerDisplay';
 
-export default function RecordItem(props) {
+export default function RecordItem({record, onPress}) {
   return (
-    <TouchableOpacity style={styles.item}>
+    <TouchableOpacity style={styles.item} onPress={() => onPress(record)}>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text>{props.title}</Text>
+        <Text>{record.title}</Text>
         <View style={{alignItems: 'flex-end'}}>
-          <TimerDisplay seconds={props.milliseconds} fontSize={14} color='black' />
-          <Text>{props.count}</Text>
+          <TimerDisplay seconds={record.milliseconds} fontSize={14} color='black' />
+          <Text>{record.count}</Text>
         </View>
       </View>
     </TouchableOpacity>

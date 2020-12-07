@@ -66,11 +66,10 @@ export default class RecordingScreen extends React.Component {
   }
 
   onFinish = () => {
-    this.setState({finishModalVisible: true})
+    this.setState({finishModalVisible: true});
   }
 
   onSave = async (title) => {
-    console.log('save', title);
     try {
       const value = await AsyncStorage.getItem('records');
       if(value !== null) {
@@ -92,8 +91,13 @@ export default class RecordingScreen extends React.Component {
       // error reading value
       console.log('error writing value');
     }
-    this.props.onStopRecording();
     this.setState({finishModalVisible: false});
+    return this.props.onStopRecording();
+  }
+
+  onDiscard = () => {
+    this.setState({finishModalVisible: false});
+    this.props.onStopRecording();
   }
 
   render() {
@@ -135,7 +139,7 @@ export default class RecordingScreen extends React.Component {
           onRequestClose={() => {
             console.log('Modal has been closed.');
           }}>
-          <FinishScreen milliseconds={seconds} count={count} onSave={(title) => this.onSave(title) } onResume={() => this.setState({finishModalVisible: false})} />
+          <FinishScreen milliseconds={seconds} count={count} onSave={(title) => this.onSave(title) } onResume={() => this.setState({finishModalVisible: false})} onDiscard={() => this.onDiscard()} />
         </Modal>
         <StatusBar style="auto" />
       </SafeAreaView>
