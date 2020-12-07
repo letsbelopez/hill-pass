@@ -1,35 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, SafeAreaView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, TouchableOpacity, View, Text, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import RecordItem from '../components/RecordItem';
+import RecordScreen from './RecordScreen';
 
 export default function RecordsScreen(props) {
   const [data, setData] = useState([]);
+  const [selectedRecord, setSelectedRecord] = useState(null);
   
   useEffect(() => {
+    /**
+     * Records Type:
+     * { id: '1', title: 'Hill Climbs', milliseconds: 1000, count: 7 }
+     */
     // AsyncStorage.setItem('records', JSON.stringify([]));
     AsyncStorage.getItem('records')
       .then(data => setData(JSON.parse(data)))
-  });
+  }, []);
 
   const renderItem = ({item}) => {
     return (
       <RecordItem 
-        title={item.title} 
-        milliseconds={item.milliseconds}
-        count={item.count} 
+        record={item}
+        onPress={selectRecord}
       />
     );
   }
 
-  // const DATA = [
-  //   { id: '1', title: 'Hill Climbs', milliseconds: 1000, count: 7 },
-  //   { id: '2', title: 'Laps', milliseconds: 2000, count: 7 },
-  //   { id: '3', title: 'Jump Rope', milliseconds: 3000, count: 7 },
-  //   { id: '4', title: 'Heavy Squats', milliseconds: 4000, count: 7 },
-  //   { id: '5', title: 'Pullups', milliseconds: 5000, count: 7 },
-  // ];
+  const selectRecord = record => {
+    console.log('select', record);
+    setSelectedRecord(record);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -48,6 +50,16 @@ export default function RecordsScreen(props) {
           </View>
         </TouchableOpacity>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={!!selectedRecord}
+        presentationStyle="overFullScreen"
+        onRequestClose={() => {
+          console.log('Modal has been closed.');
+        }}>
+        <RecordScreen record={selectedRecord} onCancel={() => setSelectedRecord(null)} />
+      </Modal>
     </SafeAreaView>
   );
 }

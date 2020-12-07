@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, Button} from 'react-native';
+import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
 
 import TimerDisplay from '../components/TimerDisplay';
 
@@ -8,22 +8,55 @@ export default function FinishScreen(props) {
   return (
     <View style={{
       backgroundColor: 'white',
-      borderRadius: 20,
       paddingVertical: 50,
-      alignItems: 'center',
       justifyContent: 'center',
       flex: 1
     }}>
-      <View>
-        <View>
-          <Text>Name:</Text>
-          <TextInput placeholder="Title your recording" value={value} onChangeText={text => setTitle(text)} />
+      <View style={styles.horizontalRow}>
+        <View style={styles.stat}>
+          <Text style={styles.statLabel}>Time</Text>
+          <TimerDisplay seconds={props.milliseconds} fontSize={20} />
         </View>
-        <Text>Time: <TimerDisplay seconds={props.milliseconds} /></Text>
-        <Text>Count: {props.count}</Text>
-        <Button title="Go back" onPress={props.onResume}/>
-        <Button title="Save" onPress={() => props.onSave(value)} />
+        <View style={{borderWidth: 0.5, borderColor: 'grey', height: '35%'}} />
+        <View style={styles.stat}>
+          <Text style={styles.statLabel}>Count</Text>
+          <Text style={{fontSize: 20}}>{props.count}</Text>
+        </View>
       </View>
+      <View style={styles.header}><Text style={styles.statLabel}>CUSTOMIZE YOUR TIMER</Text></View>
+      <View style={{...styles.formItem, ...styles.horizontalRow}}>
+        <Text style={styles.formItemLabel}>Name:</Text>
+        <TextInput placeholder="Title your recording" value={value} onChangeText={text => setTitle(text)} />
+      </View>
+      <Button title="Resume" onPress={props.onResume} />
+      <Button title="Discard Activity" color="red" onPress={props.onDiscard} />
+      <Button title="Save" onPress={() => props.onSave(value)} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  horizontalRow: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  stat: {
+    paddingVertical: 10,
+    paddingHorizontal: 20
+  },
+  statLabel: {
+    fontSize: 11,
+    color: 'grey'
+  },
+  header: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: 'lightgrey'
+  },
+  formItem: {
+    padding: 20,
+  },
+  formItemLabel: {
+    marginRight: 20
+  },
+});
