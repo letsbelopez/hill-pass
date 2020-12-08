@@ -16,7 +16,7 @@ export default function RecordsScreen(props) {
      */
     // AsyncStorage.setItem('records', JSON.stringify([]));
     AsyncStorage.getItem('records')
-      .then(data => setData(JSON.parse(data)))
+      .then(data => setData(JSON.parse(data)));
   }, []);
 
   const renderItem = ({item}) => {
@@ -29,8 +29,23 @@ export default function RecordsScreen(props) {
   }
 
   const selectRecord = record => {
-    console.log('select', record);
     setSelectedRecord(record);
+  }
+
+  const onResume = record => {
+    setSelectedRecord(null);
+    props.onStartRecording(record);
+  }
+
+  const onDelete = async id => {
+    let filtered = data.filter(r => r.id != id);
+    try {
+      await AsyncStorage.setItem('records', JSON.stringify(filtered));
+    } catch (error) {
+      console.log(`Error saving data`);
+    }
+    setData(filtered);
+    setSelectedRecord(null);
   }
 
   return (
@@ -39,7 +54,9 @@ export default function RecordsScreen(props) {
         data={data}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-        ItemSeparatorComponent={() => <View style={styles.separator} />} />
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ListEmptyComponent={() => <View style={styles.emptyComponent}><Text style={{color: 'grey'}}>List is empty, record something!</Text></View>}
+      />
       <View style={styles.footer}>
         <TouchableOpacity onPress={props.onStartRecording}>
           <View style={styles.recordButton}>
@@ -58,7 +75,7 @@ export default function RecordsScreen(props) {
         onRequestClose={() => {
           console.log('Modal has been closed.');
         }}>
-        <RecordScreen record={selectedRecord} onCancel={() => setSelectedRecord(null)} />
+        <RecordScreen record={selectedRecord} onCancel={() => setSelectedRecord(null)} onResumeRecordTiming={onResume} onDelete={onDelete} />
       </Modal>
     </SafeAreaView>
   );
@@ -103,5 +120,10 @@ const styles = StyleSheet.create({
     width: 15,
     borderRadius: 15 * 2,
     backgroundColor: 'grey'
-  }
+  },
+  emptyComponent: {
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
