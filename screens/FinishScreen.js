@@ -1,10 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
 
 import TimerDisplay from '../components/TimerDisplay';
 
 export default function FinishScreen(props) {
-  const [value, setTitle] = useState()
+  const [value, setTitle] = useState(null);
+
+  useEffect(() => {
+    if (props.title) setTitle(props.title);
+  }, []);
+
   return (
     <View style={{
       backgroundColor: 'white',

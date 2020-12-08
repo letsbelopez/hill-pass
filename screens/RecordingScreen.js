@@ -19,6 +19,9 @@ export default class RecordingScreen extends React.Component {
   }
 
   componentDidMount() {
+    if (this.props.record) {
+      this.setState({pausedTime: this.props.record.milliseconds});
+    }
     this.onStartClock();
   }
 
@@ -56,13 +59,6 @@ export default class RecordingScreen extends React.Component {
 
   onCountDown = () => {
     this.setState({count: this.state.count - 1});
-  }
-  
-  resetClock = () => {
-    this.setState({
-      seconds: 0,
-      pausedTime: 0
-    });
   }
 
   onFinish = () => {
@@ -136,10 +132,14 @@ export default class RecordingScreen extends React.Component {
           transparent={false}
           visible={finishModalVisible}
           presentationStyle="overFullScreen"
-          onRequestClose={() => {
-            console.log('Modal has been closed.');
-          }}>
-          <FinishScreen milliseconds={seconds} count={count} onSave={(title) => this.onSave(title) } onResume={() => this.setState({finishModalVisible: false})} onDiscard={() => this.onDiscard()} />
+        >
+          <FinishScreen 
+            milliseconds={seconds} 
+            count={count} 
+            title={this.props.record ? this.props.record.title : null} 
+            onSave={(title) => this.onSave(title) } 
+            onResume={() => this.setState({finishModalVisible: false})} 
+            onDiscard={() => this.onDiscard()} />
         </Modal>
         <StatusBar style="auto" />
       </SafeAreaView>
