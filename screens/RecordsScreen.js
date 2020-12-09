@@ -32,11 +32,6 @@ export default function RecordsScreen(props) {
     setSelectedRecord(record);
   }
 
-  const onResume = record => {
-    setSelectedRecord(null);
-    props.onStartRecording(record);
-  }
-
   const onDelete = async id => {
     let filtered = data.filter(r => r.id != id);
     try {
@@ -75,7 +70,7 @@ export default function RecordsScreen(props) {
         onRequestClose={() => {
           console.log('Modal has been closed.');
         }}>
-        <RecordScreen record={selectedRecord} onCancel={() => setSelectedRecord(null)} onResumeRecordTiming={onResume} onDelete={onDelete} />
+        <RecordScreen record={selectedRecord} onCancel={() => setSelectedRecord(null)} onDelete={onDelete} />
       </Modal>
     </SafeAreaView>
   );
