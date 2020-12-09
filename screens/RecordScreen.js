@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Button, Text, StyleSheet} from 'react-native';
 import TimerDisplay from '../components/TimerDisplay';
 
-export default function RecordScreen({record, onCancel, onResumeRecordTiming, onDelete}) {
+export default function RecordScreen({record, onCancel, onDelete}) {
   return (
     <View style={{
       backgroundColor: 'white',
@@ -27,7 +27,6 @@ export default function RecordScreen({record, onCancel, onResumeRecordTiming, on
         <Text>{record.title}</Text>
       </View>
       <Button title="Cancel" color="grey" onPress={onCancel} />
-      <Button title="Start new timer based on these values" onPress={() => onResumeRecordTiming(record)} />
       <Button title="Delete" color="red" onPress={() => onDelete(record.id)} />
     </View>
   )
