@@ -45,6 +45,9 @@ export default function RecordsScreen(props) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Records</Text>
+      </View>
       <FlatList
         data={data}
         renderItem={renderItem}
@@ -76,21 +79,25 @@ export default function RecordsScreen(props) {
   );
 }
 
+const hpLightGrey = 'hsla(0, 0%, 75%, 1)';
+const hpFlatBlack = 'hsla(0, 0%, 15%, 1)';
+const hpTabsColor = 'hsla(0, 0%, 35%, 1)';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white'
   },
   separator: {
-    backgroundColor: 'lightgrey',
+    backgroundColor: hpFlatBlack,
     height: 1,
-    marginLeft: 20
+    marginHorizontal: 20,
   },
   footer: {
     paddingTop: 5,
-    paddingBottom: 5,
+    paddingBottom: 2,
     borderTopWidth: 1,
-    borderTopColor: 'lightgrey',
+    borderTopColor: hpLightGrey,
     backgroundColor: 'white'
   },
   recordButton: {
@@ -99,14 +106,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   recordButtonLabel: {
-    marginTop: 5
+    marginTop: 1,
+    color: hpTabsColor,
   },
   recordIconOuter: {
     height: 30,
     width: 30,
     borderRadius: 30 *2,
     borderWidth: 1,
-    borderColor: 'grey',
+    borderColor: hpTabsColor,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -114,11 +122,23 @@ const styles = StyleSheet.create({
     height: 15,
     width: 15,
     borderRadius: 15 * 2,
-    backgroundColor: 'grey'
+    backgroundColor: hpTabsColor
   },
   emptyComponent: {
     padding: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  header: {
+    alignItems: 'center',
+    paddingTop: 5,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: hpLightGrey,
+    backgroundColor: 'white',
+  },
+  headerTitle: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  }
 });

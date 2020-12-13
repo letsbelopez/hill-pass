@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Button, SafeAreaView, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from '@expo/vector-icons';
 
 import TimerDisplay from '../components/TimerDisplay';
 import FinishScreen from './FinishScreen';
@@ -98,16 +99,18 @@ export default class RecordingScreen extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.sectionVertical}>
-          <Text style={styles.label}>TIME</Text>
-          <TimerDisplay seconds={seconds} fontSize={75} color='black' />
-        </View>
-        <View style={{...styles.sectionVertical, ...styles.borderTop}}>
           <Text style={styles.label}>COUNT</Text>
           <Text style={{fontSize: 100}}>{count}</Text>
         </View>
-        <View style={{...styles.sectionHorizontal, ...styles.borderTop}}>
+        <View style={{...styles.sectionVertical, ...styles.borderTopBottom}}>
+          <Text style={styles.label}>TIME</Text>
+          <TimerDisplay seconds={seconds} fontSize={75} color='black' />
+        </View>
+        <View style={{...styles.sectionHorizontal}}>
           <View style={styles.buttonContainer}>
-            <Button onPress={this.onCountDown} title="-" />
+            <TouchableOpacity onPress={this.onCountDown}>
+              <Ionicons name="ios-remove" size={60}   />
+            </TouchableOpacity>
             <TouchableOpacity onPress={interval ? this.onStopClock : this.onStartClock}>
               <View style={interval ? styles.stopButton : styles.resumeButton}>
                 {interval ? <View style={styles.stopIcon}></View> : <Text style={{fontWeight: 'bold'}}>RESUME</Text>}
@@ -120,7 +123,9 @@ export default class RecordingScreen extends React.Component {
                 </View>
               </TouchableOpacity>
             )}
-            <Button onPress={this.onCountUp} title="+" />
+            <TouchableOpacity onPress={this.onCountUp}>
+              <Ionicons name="ios-add" size={60}   />
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -167,9 +172,10 @@ const styles = StyleSheet.create({
     width: '90%',
     flex: 1,
   },
-  borderTop: {
-    borderTopColor: 'lightgrey',
+  borderTopBottom: {
+    borderColor: 'lightgrey',
     borderTopWidth: 1,
+    borderBottomWidth: 1,
   },
   stopButton: {
     width: 75,
