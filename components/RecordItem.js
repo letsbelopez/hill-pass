@@ -9,8 +9,8 @@ export default function RecordItem({record, onPress}) {
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <Text>{record.title}</Text>
         <View style={{alignItems: 'flex-end'}}>
-          <TimerDisplay seconds={record.milliseconds} fontSize={14} color='black' />
           <Text>{record.count}</Text>
+          <TimerDisplay seconds={record.milliseconds} fontSize={14} color='black' />
         </View>
       </View>
     </TouchableOpacity>

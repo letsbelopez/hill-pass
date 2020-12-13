@@ -15,16 +15,16 @@ export default function FinishScreen(props) {
     }}>
       <View style={styles.horizontalRow}>
         <View style={styles.stat}>
-          <Text style={styles.statLabel}>Time</Text>
-          <TimerDisplay seconds={props.milliseconds} fontSize={20} />
-        </View>
-        <View style={{borderWidth: 0.5, borderColor: 'grey', height: '35%'}} />
-        <View style={styles.stat}>
           <Text style={styles.statLabel}>Count</Text>
           <Text style={{fontSize: 20}}>{props.count}</Text>
         </View>
+        <View style={{borderWidth: 0.5, borderColor: 'grey', height: '35%'}} />
+        <View style={styles.stat}>
+          <Text style={styles.statLabel}>Time</Text>
+          <TimerDisplay seconds={props.milliseconds} fontSize={20} />
+        </View>
       </View>
-      <View style={styles.header}><Text style={styles.statLabel}>CUSTOMIZE YOUR TIMER</Text></View>
+      <View style={styles.header}><Text style={{...styles.statLabel, color: 'white'}}>ACTIVITY</Text></View>
       <View style={{...styles.formItem, ...styles.horizontalRow}}>
         <Text style={styles.formItemLabel}>Name:</Text>
         <TextInput placeholder="Title your recording" value={value} onChangeText={text => setTitle(text)} />
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   header: {
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: 'lightgrey'
+    backgroundColor: 'black'
   },
   formItem: {
     padding: 20,
